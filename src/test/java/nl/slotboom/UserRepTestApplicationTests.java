@@ -1,4 +1,4 @@
-package com.example.userreptest;
+package nl.slotboom;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
