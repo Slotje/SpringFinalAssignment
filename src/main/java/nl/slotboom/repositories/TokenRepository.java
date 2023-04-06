@@ -3,7 +3,7 @@ package nl.slotboom.repositories;
 import java.util.List;
 import java.util.Optional;
 
-import nl.slotboom.token.Token;
+import nl.slotboom.models.Token;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 

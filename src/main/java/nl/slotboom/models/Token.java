@@ -1,4 +1,4 @@
-package nl.slotboom.token;
+package nl.slotboom.models;
 
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
@@ -6,7 +6,6 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import nl.slotboom.models.User;
 
 import javax.persistence.*;
 
@@ -18,8 +17,8 @@ import javax.persistence.*;
 public class Token {
 
     @Id
-    @GeneratedValue
-    public Integer id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    public int id;
 
     @Column(unique = true)
     public String token;

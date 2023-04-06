@@ -1,25 +1,42 @@
 package nl.slotboom.models.responses;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
+import nl.slotboom.models.User;
 
+import java.util.Date;
 
 @Getter
 @Setter
+@Data
 @AllArgsConstructor
 @Builder
 public class UserResponse {
 
-    @JsonProperty("id")
-    private String id;
+    @JsonProperty("username")
+    private String username;
 
-    @JsonProperty("name")
-    private String name;
+    @JsonProperty("role")
+    private String role;
 
-    @JsonProperty("password")
-    private String password;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
+    @JsonProperty("createdAt")
+    private Date createdAt;
+
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
+    @JsonProperty("updatedAt")
+    private Date updatedAt;
+
+    public static UserResponse from(User user) {
+        return UserResponse.builder()
+                .username(user.getUsername())
+                .role(user.getRole().name())
+                .createdAt(user.getCreatedAt())
+                .updatedAt(user.getUpdatedAt())
+                .build();
+    }
 }
+
+
 

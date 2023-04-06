@@ -11,8 +11,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import static nl.slotboom.constants.APIConstants.*;
+
 @RestController
-@RequestMapping("/api/v1/auth")
+@RequestMapping("/" + API + "/" + VERSION + "/" + AUTH_ENDPOINT)
 @RequiredArgsConstructor
 public class AuthenticationController {
 
@@ -31,6 +33,4 @@ public class AuthenticationController {
     ) {
         return ResponseEntity.ok(service.authenticate(request));
     }
-
-
 }
