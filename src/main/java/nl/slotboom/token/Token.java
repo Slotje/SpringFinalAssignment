@@ -1,6 +1,7 @@
 package nl.slotboom.token;
 
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -30,8 +31,9 @@ public class Token {
 
     public boolean expired;
 
-    @ManyToOne
-    @JoinColumn(name = "user_id")
-    public User user;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id", nullable = false)
+    @JsonBackReference
+    private User user;
 }
 
