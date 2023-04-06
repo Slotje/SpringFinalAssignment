@@ -2,6 +2,7 @@ package nl.slotboom.services;
 
 
 import lombok.RequiredArgsConstructor;
+import nl.slotboom.exceptions.UserAlreadyExistsException;
 import nl.slotboom.models.requests.AuthenticationRequest;
 import nl.slotboom.models.responses.AuthenticationResponse;
 import nl.slotboom.models.requests.CreateUserRequest;
@@ -16,6 +17,11 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.util.Date;
+
+
 @Service
 @RequiredArgsConstructor
 public class AuthenticationService {
@@ -28,14 +34,21 @@ public class AuthenticationService {
     public AuthenticationResponse register(CreateUserRequest request) {
         var existingUser = repository.findByUsername(request.getUsername());
         if (existingUser.isPresent()) {
-            throw new UserAlreadyExistsException("User with same username already exists");
+            throw new UserAlreadyExistsException();
         }
+        LocalDateTime now = LocalDateTime.now();
+        Date createdAt = Date.from(now.toLocalDate().atStartOfDay(ZoneId.systemDefault()).toInstant());
+        Date updatedAt = Date.from(now.toLocalDate().atStartOfDay(ZoneId.systemDefault()).toInstant());
         var user = User.builder()
                 .username(request.getUsername())
                 .password(passwordEncoder.encode(request.getPassword()))
                 .role(Role.USER)
+                .createdAt(createdAt)
+                .updatedAt(updatedAt)
                 .build();
+
         var savedUser = repository.save(user);
+        System.out.println("User created successfully");
         var jwtToken = jwtService.generateToken(user);
         saveUserToken(savedUser, jwtToken);
         return AuthenticationResponse.builder()
