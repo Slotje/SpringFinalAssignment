@@ -9,10 +9,10 @@
         <relativePath/> <!-- lookup parent from repositories -->
     </parent>
     <groupId>nl.slotboom</groupId>
-    <artifactId>UserRepTest</artifactId>
+    <artifactId>SpringFinalAssignment</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>UserRepTest</name>
-    <description>UserRepTest</description>
+    <name>SpringFinalAssignment</name>
+    <description>SpringFinalAssignment</description>
     <properties>
         <java.version>17</java.version>
     </properties>
