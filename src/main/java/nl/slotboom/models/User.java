@@ -1,12 +1,28 @@
 package nl.slotboom.models;
 
-import jakarta.persistence.*;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
+import java.util.Collection;
 import java.util.Date;
+import java.util.List;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import nl.slotboom.token.Token;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
-@Entity // This tells Hibernate to make a table out of this class
-public class User {
+import javax.persistence.*;
+
+@Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+@Entity
+@Table(name = "users")
+public class User implements UserDetails {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
@@ -17,6 +33,8 @@ public class User {
 
     @Column(name = "password")
     private String password;
+    @Enumerated(EnumType.STRING)
+    private Role role;
 
     @Column(name = "created_at")
     private Date createdAt;
@@ -24,43 +42,41 @@ public class User {
     @Column(name = "updated_at")
     private Date updatedAt;
 
-    public Integer getId() {
-        return id;
+    @OneToMany(mappedBy = "user")
+    private List<Token> tokens;
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return List.of(new SimpleGrantedAuthority(role.name()));
     }
 
-    public void setId(Integer id) {
-        this.id = id;
+    @Override
+    public String getPassword() {
+        return password;
     }
 
+    @Override
     public String getUsername() {
         return username;
     }
 
-    public void setUsername(String name) {
-        this.username = name;
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
     }
 
-    public String getPassword(){
-        return password;
+    @Override
+    public boolean isAccountNonLocked() {
+        return true;
     }
 
-    public void setPassword(String password){
-        this.password = new BCryptPasswordEncoder().encode(password);
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
     }
 
-    public Date getCreatedAt() {
-        return createdAt;
-    }
-
-    public void setCreatedAt(Date createdAt) {
-        this.createdAt = createdAt;
-    }
-
-    public Date getUpdatedAt() {
-        return updatedAt;
-    }
-
-    public void setUpdatedAt(Date updatedAt) {
-        this.updatedAt = updatedAt;
+    @Override
+    public boolean isEnabled() {
+        return true;
     }
 }

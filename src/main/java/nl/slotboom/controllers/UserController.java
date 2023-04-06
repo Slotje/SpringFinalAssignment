@@ -1,43 +1,14 @@
 package nl.slotboom.controllers;
 
-import nl.slotboom.models.User;
-import nl.slotboom.security.JwtTokenUtil;
-import nl.slotboom.services.UserService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
-import nl.slotboom.repositories.UserRepository;
-
-import java.util.Date;
 
 @Controller
-@RequestMapping(path = "/user")
+@RequestMapping("/api/v1")
 public class UserController {
 
-    @Autowired
-    private UserService userService;
-
-    @PostMapping("/login")
-    public ResponseEntity<String> login(@RequestParam String username, @RequestParam String password) {
-        String token = String.valueOf(userService.login(username, password));
-        if (token == null) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid username or password");
-        }
-        return ResponseEntity.ok(token);
-    }
-
-    @PostMapping("/register")
-    public ResponseEntity<String> register(@RequestParam String username, @RequestParam String password) {
-        boolean success = userService.register(username, password).hasBody();
-        if (!success) {
-            return ResponseEntity.status(HttpStatus.CONFLICT).body("User with same username already exists");
-        }
-        return ResponseEntity.ok("User created successfully");
-    }
 }
+
 
 
 //
