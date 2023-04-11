@@ -34,7 +34,7 @@ public class AuthenticationService {
     public AuthenticationResponse register(CreateUserRequest request) {
         var existingUser = repository.findByUsername(request.getUsername());
         if (existingUser.isPresent()) {
-            throw new UserAlreadyExistsException();
+            throw new UserAlreadyExistsException("User already exists");
         }
         LocalDateTime now = LocalDateTime.now();
         Date createdAt = Date.from(now.toLocalDate().atStartOfDay(ZoneId.systemDefault()).toInstant());

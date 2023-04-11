@@ -1,52 +1,44 @@
 package nl.slotboom.services;
 
+import nl.slotboom.exceptions.UserNotAllowedException;
 import nl.slotboom.models.User;
+import nl.slotboom.models.requests.UpdateUserRequest;
 import nl.slotboom.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-
-import java.util.Date;
 
 @Service
 public class UserService {
-//
-//    @Autowired
-//    private UserRepository userRepository;
-//
-//    public ResponseEntity<String> login(String username, String password) {
-//        User user = userRepository.findByUsername(username);
-//        if (user == null) {
-//            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid username or password");
-//        }
-//        if (!new BCryptPasswordEncoder().matches(password, user.getPassword())) {
-//            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid username or password");
-//        }
-//        String token = jwtTokenUtil.generateToken(user.getUsername());
-//        return ResponseEntity.ok(token);
-//    }
-//
-//    public ResponseEntity<String> register(String username, String password) {
-//        User existingUser = userRepository.findByUsername(username);
-//        if (existingUser != null) {
-//            return ResponseEntity.status(HttpStatus.CONFLICT).body("User with same username already exists");
-//        }
-//        User newUser = new User();
-//        newUser.setUsername(username);
-//        newUser.setPassword(password);
-//        newUser.setCreatedAt(new Date());
-//        newUser.setUpdatedAt(new Date());
-//        userRepository.save(newUser);
-//        return ResponseEntity.ok("User created successfully");
-//    }
-//
-//    public String getUsernameFromToken(String token) {
-//        return jwtTokenUtil.getUsernameFromToken(token);
-//    }
-//
-//    public boolean validateToken(String token) {
-//        return jwtTokenUtil.validateToken(token);
-//    }
+
+    @Autowired
+    private UserRepository userRepository;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
+    public User updateUser(String username, UpdateUserRequest updateUserRequest, Authentication authentication) {
+        String currentUsername = authentication.getName();
+        if (!currentUsername.equals(username)) {
+            throw new UserNotAllowedException("Cannot update another user's account");
+        }
+
+        User existingUser = userRepository.findByUsername(username)
+                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+
+        existingUser.setUsername(updateUserRequest.getUsername());
+
+        String newPassword = updateUserRequest.getPassword();
+        if (newPassword != null) {
+            String encodedPassword = passwordEncoder.encode(newPassword);
+            existingUser.setPassword(encodedPassword);
+        }
+
+        return userRepository.save(existingUser);
+    }
 }
+
+
+

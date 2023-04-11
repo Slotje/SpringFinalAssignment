@@ -1,14 +1,15 @@
 package nl.slotboom.models.requests;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import nl.slotboom.models.Role;
 
-public class UpdateUserRequest {
+public class UpdateUserRoleRequest {
     @JsonProperty
     private String username;
-    @JsonProperty
-    private String password;
 
-    // Getters and setters
+    @JsonProperty
+    private Role role;
+
     public String getUsername() {
         return username;
     }
@@ -17,14 +18,12 @@ public class UpdateUserRequest {
         this.username = username;
     }
 
-    public String getPassword() {
-        return password;
+    public Role getRole() {
+        return role;
     }
 
-    public void setPassword(String password) {
-        this.password = password;
+    public void setRole(Role role) {
+        this.role = role;
     }
 }
-
-
 
