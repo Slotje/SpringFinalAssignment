@@ -21,24 +21,26 @@ import static nl.slotboom.constants.APIConstants.*;
 public class AdminController {
 
     @Autowired
-    private AdminService adminService;
+    private AdminService service;
 
     @GetMapping("/details/{username}")
-    public ResponseEntity<UserResponse> getUserProfile(@PathVariable String username) {
-        UserResponse userResponse = adminService.getUserResponseByUsername(username);
+    public ResponseEntity<UserResponse> getUserProfile(
+            @PathVariable String username) {
+        UserResponse userResponse = service.getUserResponseByUsername(username);
         return ResponseEntity.ok(userResponse);
     }
 
     @GetMapping("/all")
     public List<UserResponse> getAllUsers() {
-        return adminService.getAllUserResponses();
+        return service.getAllUserResponses();
     }
 
     @PutMapping("/update_role/{username}")
-    public ResponseEntity<UserResponse> updateUserRole(@PathVariable String username,
-                                                       @RequestBody UpdateUserRoleRequest updateUserRoleRequest,
-                                                       Authentication authentication) {
-        User updatedUser = adminService.updateUserRole(username, updateUserRoleRequest, authentication);
+    public ResponseEntity<UserResponse> updateUserRole(
+            @PathVariable String username,
+            @RequestBody UpdateUserRoleRequest updateUserRoleRequest,
+            Authentication authentication) {
+        User updatedUser = service.updateUserRole(username, updateUserRoleRequest, authentication);
 
         UserResponse userResponse = UserResponse.from(updatedUser);
         return ResponseEntity.ok(userResponse);

@@ -2,7 +2,7 @@ package nl.slotboom.services;
 
 
 import lombok.RequiredArgsConstructor;
-import nl.slotboom.exceptions.UserAlreadyExistsException;
+import nl.slotboom.exceptions.AppException;
 import nl.slotboom.models.requests.AuthenticationRequest;
 import nl.slotboom.models.responses.AuthenticationResponse;
 import nl.slotboom.models.requests.CreateUserRequest;
@@ -12,6 +12,7 @@ import nl.slotboom.repositories.TokenRepository;
 import nl.slotboom.repositories.UserRepository;
 import nl.slotboom.models.Token;
 import nl.slotboom.models.TokenType;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -34,7 +35,7 @@ public class AuthenticationService {
     public AuthenticationResponse register(CreateUserRequest request) {
         var existingUser = repository.findByUsername(request.getUsername());
         if (existingUser.isPresent()) {
-            throw new UserAlreadyExistsException("User already exists");
+            throw new AppException("User already exists", HttpStatus.CONFLICT);
         }
         LocalDateTime now = LocalDateTime.now();
         Date createdAt = Date.from(now.toLocalDate().atStartOfDay(ZoneId.systemDefault()).toInstant());

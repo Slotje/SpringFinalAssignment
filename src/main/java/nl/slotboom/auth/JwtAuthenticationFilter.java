@@ -20,33 +20,42 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 @Component
-@RequiredArgsConstructor
+@RequiredArgsConstructor // Constructor injection will be used to inject dependencies
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
-
+    // The following final fields are dependencies that will be injected via constructor injection
     private final JwtService jwtService;
     private final UserDetailsService userDetailsService;
     private final TokenRepository tokenRepository;
 
+    // Override the doFilterInternal method from OncePerRequestFilter to implement the JWT authentication logic
     @Override
     protected void doFilterInternal(
             @NonNull HttpServletRequest request,
             @NonNull HttpServletResponse response,
             @NonNull FilterChain filterChain
     ) throws ServletException, IOException {
+        // Extract the JWT token from the "Authorization" header of the request
         final String authHeader = request.getHeader("Authorization");
         final String jwt;
         final String userName;
-        if (authHeader == null ||!authHeader.startsWith("Bearer ")) {
+        // If the JWT token is not present or doesn't start with "Bearer ", continue with the filter chain without authentication
+        if (authHeader == null || !authHeader.startsWith("Bearer ")) {
             filterChain.doFilter(request, response);
             return;
         }
+        // Extract the JWT token from the "Authorization" header
         jwt = authHeader.substring(7);
+        // Extract the username from the JWT token using the "jwtService" dependency
         userName = jwtService.extractUsername(jwt);
+        // If the username is not null and the user is not already authenticated
         if (userName != null && SecurityContextHolder.getContext().getAuthentication() == null) {
+            // Load the user details using the "userDetailsService" dependency
             UserDetails userDetails = this.userDetailsService.loadUserByUsername(userName);
+            // Check if the token is valid and not expired using the "tokenRepository" dependency
             var isTokenValid = tokenRepository.findByToken(jwt)
                     .map(t -> !t.isExpired() && !t.isRevoked())
                     .orElse(false);
+            // If the token is valid, create a new authentication token and set it in the security context using the "SecurityContextHolder" class from Spring Security
             if (jwtService.isTokenValid(jwt, userDetails) && isTokenValid) {
                 UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
                         userDetails,
@@ -59,6 +68,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 SecurityContextHolder.getContext().setAuthentication(authToken);
             }
         }
+        // Continue with the filter chain
         filterChain.doFilter(request, response);
     }
 }

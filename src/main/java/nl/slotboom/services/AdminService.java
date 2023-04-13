@@ -1,14 +1,14 @@
 package nl.slotboom.services;
 
-import nl.slotboom.exceptions.UserNotAllowedException;
+import nl.slotboom.exceptions.AppException;
 import nl.slotboom.models.Role;
 import nl.slotboom.models.User;
 import nl.slotboom.models.requests.UpdateUserRoleRequest;
 import nl.slotboom.models.responses.UserResponse;
 import nl.slotboom.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -22,7 +22,7 @@ public class AdminService {
 
     public UserResponse getUserResponseByUsername(String username) {
         var user = userRepository.findByUsername(username)
-                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+                .orElseThrow(() -> new AppException("User not found", HttpStatus.NOT_FOUND));
 
         return UserResponse.from(user);
     }
@@ -40,22 +40,21 @@ public class AdminService {
     public User updateUserRole(String username, UpdateUserRoleRequest updateUserRoleRequest, Authentication authentication) {
         String currentUsername = authentication.getName();
         User currentUser = userRepository.findByUsername(currentUsername)
-                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+                .orElseThrow(() -> new AppException("User not found", HttpStatus.NOT_FOUND));
 
         if (currentUser.getRole() != Role.ADMIN) {
-            throw new UserNotAllowedException("Only admins can update user roles");
+            throw new AppException("Only admins can update user roles", HttpStatus.FORBIDDEN);
         }
 
         User existingUser = userRepository.findByUsername(username)
-                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+                .orElseThrow(() -> new AppException("User not found", HttpStatus.NOT_FOUND));
 
         if (existingUser.getRole() == Role.ADMIN) {
-            throw new UserNotAllowedException("Cannot update an admin's role");
+            throw new AppException("Cannot update an admin's role", HttpStatus.METHOD_NOT_ALLOWED);
         }
 
         existingUser.setRole(updateUserRoleRequest.getRole());
         return userRepository.save(existingUser);
     }
-
 }
 
