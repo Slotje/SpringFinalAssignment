@@ -17,20 +17,23 @@ import static nl.slotboom.constants.APIConstants.*;
 @RequestMapping("/" + API + "/" + VERSION + "/" + TASKS_ENDPOINT)
 @PreAuthorize("isAuthenticated()")
 public class TasksController {
-    @Autowired
+
+
+    @Autowired // Injecting TasksService bean
     private TasksService service;
 
+    // This endpoint handles POST requests to create a new task for a specific task list
     @PostMapping("/{taskListName}/add")
     public ResponseEntity<TaskResponse> createTaskForTaskList(
             @PathVariable String taskListName,
             @RequestBody CreateTaskRequest request,
             Authentication authentication) {
         String username = authentication.getName();
-        TaskResponse taskResponse = service.createTaskForTaskList(username, taskListName, request, authentication);
-        return ResponseEntity.ok(taskResponse);
+        TaskResponse response = service.createTaskForTaskList(username, taskListName, request);
+        return ResponseEntity.ok(response);
     }
 
-
+    // This endpoint handles PUT requests to update the status of a specific task in a specific task list
     @PutMapping("/updatestatus/{taskListName}/{taskName}")
     public ResponseEntity<TaskResponse> updateTaskStatus(
             @PathVariable String taskListName,
@@ -38,11 +41,11 @@ public class TasksController {
             @RequestBody UpdateTaskStatusRequest request,
             Authentication authentication) {
         String username = authentication.getName();
-        TaskResponse taskResponse = service.updateTaskStatus(username, taskName,taskListName, request);
-        return ResponseEntity.ok(taskResponse);
+        TaskResponse response = service.updateTaskStatus(username, taskName, taskListName, request);
+        return ResponseEntity.ok(response);
     }
 
-
+    // This endpoint handles PUT requests to update the details of a specific task in a specific task list
     @PutMapping("/update/{taskListName}/{taskName}")
     public ResponseEntity<TaskResponse> updateTask(
             @PathVariable String taskName,
@@ -50,10 +53,11 @@ public class TasksController {
             @RequestBody UpdateTaskRequest request,
             Authentication authentication) {
         String username = authentication.getName();
-        TaskResponse taskResponse = service.updateTask(username, taskName, taskListName, request);
-        return ResponseEntity.ok(taskResponse);
+        TaskResponse response = service.updateTask(username, taskName, taskListName, request);
+        return ResponseEntity.ok(response);
     }
 
+    // This endpoint handles DELETE requests to delete a specific task from a specific task list
     @DeleteMapping("/delete/{taskListName}/{taskName}")
     public ResponseEntity<Void> deleteTask(
             @PathVariable String taskListName,

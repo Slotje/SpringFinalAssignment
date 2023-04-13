@@ -5,6 +5,7 @@ import nl.slotboom.models.requests.AuthenticationRequest;
 import nl.slotboom.models.responses.AuthenticationResponse;
 import nl.slotboom.services.AuthenticationService;
 import nl.slotboom.models.requests.CreateUserRequest;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -18,8 +19,11 @@ import static nl.slotboom.constants.APIConstants.*;
 @RequiredArgsConstructor
 public class AuthenticationController {
 
+    // Injecting AuthenticationService bean
+    @Autowired
     private final AuthenticationService service;
 
+    // Mapping POST request to /register endpoint for user registration
     @PostMapping("/register")
     public ResponseEntity<AuthenticationResponse> register(
             @RequestBody CreateUserRequest request
@@ -27,6 +31,7 @@ public class AuthenticationController {
         return ResponseEntity.ok(service.register(request));
     }
 
+    // Mapping POST request to /authenticate endpoint for user authentication
     @PostMapping("/authenticate")
     public ResponseEntity<AuthenticationResponse> authenticate(
             @RequestBody AuthenticationRequest request

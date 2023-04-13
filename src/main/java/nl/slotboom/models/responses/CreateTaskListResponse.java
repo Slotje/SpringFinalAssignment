@@ -1,20 +1,23 @@
 package nl.slotboom.models.responses;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import nl.slotboom.models.TaskStatus;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
-import nl.slotboom.models.Tasks;
+import nl.slotboom.models.TaskLists;
+import nl.slotboom.models.User;
 
 import java.util.Date;
 
 @Getter
 @Setter
+@AllArgsConstructor
 @Builder
-// This is a response class for Task objects
-public class TaskResponse {
+// This is a response class for new Tasklist object
+public class CreateTaskListResponse {
+
     @JsonProperty("id")
     private int id;
 
@@ -24,8 +27,8 @@ public class TaskResponse {
     @JsonProperty("description")
     private String description;
 
-    @JsonProperty("status")
-    private TaskStatus status;
+    @JsonProperty("username")
+    private String username;
 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     @JsonProperty("createdAt")
@@ -35,14 +38,14 @@ public class TaskResponse {
     @JsonProperty("updatedAt")
     private Date updatedAt;
 
-    public static TaskResponse from(Tasks Tasks) {
-        return TaskResponse.builder()
-                .id(Tasks.getId())
-                .name(Tasks.getName())
-                .description(Tasks.getDescription())
-                .status(Tasks.getStatus())
-                .createdAt(Tasks.getCreatedAt())
-                .updatedAt(Tasks.getUpdatedAt())
+    public static CreateTaskListResponse from(TaskLists taskLists, User user) {
+        return CreateTaskListResponse.builder()
+                .id(taskLists.getId())
+                .name(taskLists.getName())
+                .description(taskLists.getDescription())
+                .username(user.getUsername())
+                .createdAt(taskLists.getCreatedAt())
+                .updatedAt(taskLists.getUpdatedAt())
                 .build();
     }
 }

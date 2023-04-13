@@ -15,7 +15,7 @@ import javax.persistence.*;
 @AllArgsConstructor
 @Entity
 public class Token {
-
+    // all the collums in the database
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     public int id;
@@ -30,6 +30,7 @@ public class Token {
 
     public boolean expired;
 
+    // the user_id that is linked with the token
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
     @JsonBackReference

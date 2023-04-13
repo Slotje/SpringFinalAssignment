@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
+// This is a data class that represents an authentication request
 public class AuthenticationRequest {
     @JsonProperty("username")
     private String username;

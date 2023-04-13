@@ -24,15 +24,24 @@ import static nl.slotboom.constants.APIConstants.*;
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 @RequiredArgsConstructor
 public class SecurityConfig {
+
+    // Injecting JwtAuthenticationFilter bean
     private final JwtAuthenticationFilter jwtAuthFilter;
+
+    // Injecting AuthenticationProvider bean
     private final AuthenticationProvider authenticationProvider;
+
+    // Injecting LogoutHandler bean
     private final LogoutHandler logoutHandler;
 
+    // Defining a SecurityFilterChain bean to configure security for HttpRequests
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         RequestMatcher[] requestMatchers = {
                 new AntPathRequestMatcher("/" + API + "/" + VERSION + "/" + AUTH_ENDPOINT + "/**")
         };
+
+        // Configuring the HttpSecurity object to disable CSRF protection, authorize specific requests and require authentication for all other requests
         http
                 .csrf()
                 .disable()
@@ -47,12 +56,13 @@ public class SecurityConfig {
                 .and()
                 .authenticationProvider(authenticationProvider)
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
+                // Configuring logout behavior
                 .logout()
                 .logoutUrl("/user/logout")
                 .addLogoutHandler(logoutHandler)
-                .logoutSuccessHandler((request, response, authentication) -> SecurityContextHolder.clearContext())
-        ;
+                .logoutSuccessHandler((request, response, authentication) -> SecurityContextHolder.clearContext());
 
         return http.build();
     }
 }
+

@@ -12,6 +12,7 @@ import java.util.Date;
 @Data
 @AllArgsConstructor
 @Builder
+// This is a response class for User objects
 public class UserResponse {
 
     @JsonProperty("username")

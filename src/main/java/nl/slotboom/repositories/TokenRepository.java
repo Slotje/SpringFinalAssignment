@@ -7,8 +7,10 @@ import nl.slotboom.models.Token;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
+// TokenRepository: Repository of the tokens
 public interface TokenRepository extends JpaRepository<Token, Integer> {
 
+    // This is the query for the token  to find all Token entities that are associated with a given User ID
     @Query(value = """
       select t from Token t inner join User u\s
       on t.user.id = u.id\s

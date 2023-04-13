@@ -10,7 +10,9 @@ import java.util.Optional;
 
 
 @Repository
+// TasksRepository: Repository of the Tasks
 public interface TasksRepository extends JpaRepository<Tasks, Integer> {
     Optional<Tasks> findByTaskListAndName(TaskLists taskList, String name);
     List<Tasks> findByTaskList(TaskLists taskList);
+    boolean existsByNameAndTaskList(String name, TaskLists taskLists);
 }

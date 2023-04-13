@@ -18,6 +18,7 @@ import java.util.stream.Collectors;
 @Setter
 @AllArgsConstructor
 @Builder
+// This is a response class for Tasklist objects
 public class TaskListResponse {
 
     @JsonProperty("id")

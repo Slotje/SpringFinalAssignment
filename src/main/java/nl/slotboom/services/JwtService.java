@@ -33,6 +33,7 @@ public class JwtService {
 
     // generateToken: generates a JWT token for the provided user details and additional claims.
     public String generateToken(UserDetails userDetails) {
+        // The generateToken method creates a JWT token using the provided extra claims, user details, and a secret key
         User user = (User) userDetails;
         Map<String, Object> claims = new HashMap<>();
         claims.put("role", user.getRole().name());
@@ -41,6 +42,8 @@ public class JwtService {
     }
 
     public String generateToken(Map<String, Object> extraClaims, UserDetails userDetails) {
+        // It sets the token's subject to the username of the user, sets the token's expiration time to
+        // 24 hours from the current time, and signs the token using the HMAC-SHA256 algorithm
         return Jwts
                 .builder()
                 .setClaims(extraClaims)
@@ -71,6 +74,7 @@ public class JwtService {
 
     // extractAllClaims: extracts all claims from the JWT token.
     private Claims extractAllClaims(String token) {
+        // It gets the token using the Jwts utility class and retrieves the token's body
         return Jwts
                 .parserBuilder()
                 .setSigningKey(getSignInKey())
@@ -81,7 +85,9 @@ public class JwtService {
 
     // getSignInKey: decodes and returns the secret key as a Key object that can be used to sign and validate the JWT token.
     private Key getSignInKey() {
+        // It decodes the secret key from Base64 format to a byte array
         byte[] keyBytes = Decoders.BASE64.decode(SECRET_KEY);
+        // It creates a Key object using the decoded byte array and returns it
         return Keys.hmacShaKeyFor(keyBytes);
     }
 }

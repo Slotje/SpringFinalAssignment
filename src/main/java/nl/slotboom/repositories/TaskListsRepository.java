@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
+// TaskListsRepository: Repository of the Tasklists
 public interface TaskListsRepository extends JpaRepository<TaskLists, Integer> {
     List<TaskLists> findByUser(User user);
     Optional<TaskLists> findByUserAndName(User user, String name);

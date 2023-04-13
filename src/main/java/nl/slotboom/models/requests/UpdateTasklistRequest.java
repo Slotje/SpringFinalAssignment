@@ -2,6 +2,7 @@ package nl.slotboom.models.requests;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+// This is a class representing an update request, containing properties with getter and setter methods.
 public class UpdateTasklistRequest {
     @JsonProperty
     private String name;

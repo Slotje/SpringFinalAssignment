@@ -5,6 +5,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
+/**
+    This is a global exception handler for the application that handles instances of AppException and returns
+    an HTTP response with an ErrorResponse object containing the error status code, message, and timestamp.
+ */
 @ControllerAdvice
 public class AppExceptionHandler {
 

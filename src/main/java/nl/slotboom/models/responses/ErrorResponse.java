@@ -14,6 +14,7 @@ import java.util.Date;
 @Getter
 @AllArgsConstructor
 @Builder
+// This is a response class for error objects
 public class ErrorResponse {
     @JsonProperty("status")
     private final int status;

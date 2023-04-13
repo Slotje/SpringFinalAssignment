@@ -2,6 +2,7 @@ package nl.slotboom.controllers;
 
 import nl.slotboom.models.requests.CreateTasklistRequest;
 import nl.slotboom.models.requests.UpdateTasklistRequest;
+import nl.slotboom.models.responses.CreateTaskListResponse;
 import nl.slotboom.models.responses.TaskListResponse;
 import nl.slotboom.models.responses.UpdateTaskListResponse;
 import nl.slotboom.services.TasklistsService;
@@ -15,65 +16,73 @@ import java.util.List;
 
 import static nl.slotboom.constants.APIConstants.*;
 
-@RestController // defines the class as a REST controller
-@RequestMapping("/" + API + "/" + VERSION + "/" + TASKLISTS_ENDPOINT) // sets the base endpoint for the controller
-@PreAuthorize("isAuthenticated()") // requires authentication to access any endpoint in the controller
+@RestController
+@RequestMapping("/" + API + "/" + VERSION + "/" + TASKLISTS_ENDPOINT)
+@PreAuthorize("isAuthenticated()")
 public class TasklistsController {
-    @Autowired // injects an instance of the TasklistsService into the controller
+
+    // Injecting TasklistsService bean
+    @Autowired
     private TasklistsService service;
 
-    @GetMapping("/details") // defines an HTTP GET endpoint with a path parameter
+    // Retrieves all task lists for the authenticated user
+    @GetMapping("/details")
     public ResponseEntity<List<TaskListResponse>> getTaskListsForUser(
             Authentication authentication) {
         String username = authentication.getName();
-        List<TaskListResponse> taskListResponses = service.getTaskListsForUser(username);
-        return ResponseEntity.ok(taskListResponses);
+        List<TaskListResponse> response = service.getTaskListsForUser(username);
+        return ResponseEntity.ok(response);
     }
 
-    @GetMapping("/details/{taskListName}") // defines an HTTP GET endpoint with a path variable
+    // Retrieves a specific task list for the authenticated user
+    @GetMapping("/details/{taskListName}")
     public ResponseEntity<TaskListResponse> getSpecificTaskListForUser(
             @PathVariable String taskListName,
             Authentication authentication) {
         String username = authentication.getName();
-        TaskListResponse taskListResponse = service.getSpecificTaskListsForUser(username, taskListName);
-        return ResponseEntity.ok(taskListResponse);
+        TaskListResponse response = service.getSpecificTaskListsForUser(username, taskListName);
+        return ResponseEntity.ok(response);
     }
 
-    @GetMapping("/admin/{username}") // defines an HTTP GET endpoint with a path variable and requires ADMIN authority to access
+    // Retrieves all task lists for a specified user (requires admin permission)
+    @GetMapping("/admin/{username}")
     @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<List<TaskListResponse>> getTaskListsForUser(
-            @PathVariable String username){
-        List<TaskListResponse> taskListResponses = service.getTaskListsForUser(username);
-        return ResponseEntity.ok(taskListResponses);
+            @PathVariable String username) {
+        List<TaskListResponse> response = service.getTaskListsForUser(username);
+        return ResponseEntity.ok(response);
     }
 
-    @GetMapping("/admin/all") // defines an HTTP GET endpoint and requires ADMIN authority to access
+    // Retrieves all task lists for all users (requires admin permission)
+    @GetMapping("/admin/all")
     @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<List<TaskListResponse>> getAllTaskListResponses() {
-        List<TaskListResponse> taskListResponses = service.getAllTaskListResponses();
-        return ResponseEntity.ok(taskListResponses);
+        List<TaskListResponse> response = service.getAllTaskListResponses();
+        return ResponseEntity.ok(response);
     }
 
-    @PostMapping("/add") // defines an HTTP POST endpoint
-    public ResponseEntity<TaskListResponse> createTaskListForUser(
+    // Creates a new task list for the authenticated user
+    @PostMapping("/add")
+    public ResponseEntity<CreateTaskListResponse> createTaskListForUser(
             @RequestBody CreateTasklistRequest request,
             Authentication authentication) {
         String username = authentication.getName();
-        TaskListResponse taskListResponse = service.createTaskListForUser(username, request);
-        return ResponseEntity.ok(taskListResponse);
+        CreateTaskListResponse response = service.createTaskListForUser(username, request);
+        return ResponseEntity.ok(response);
     }
 
+    // Updates an existing task list for the authenticated user
     @PutMapping("/update/{taskListName}")
     public ResponseEntity<UpdateTaskListResponse> updateTaskListForUser(
             @PathVariable String taskListName,
             @RequestBody UpdateTasklistRequest request,
             Authentication authentication) {
         String username = authentication.getName();
-        UpdateTaskListResponse updateTaskListResponse = service.updateTaskListForUser(username, taskListName, request);
-        return ResponseEntity.ok(updateTaskListResponse);
+        UpdateTaskListResponse response = service.updateTaskListForUser(username, taskListName, request);
+        return ResponseEntity.ok(response);
     }
 
-
+    // Deletes an existing task list for the authenticated user
     @DeleteMapping("/delete/{taskListName}")
     public ResponseEntity<Void> deleteTaskList(
             @PathVariable String taskListName,

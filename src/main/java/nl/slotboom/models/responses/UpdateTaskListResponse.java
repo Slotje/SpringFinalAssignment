@@ -15,6 +15,7 @@ import java.util.Date;
 @Setter
 @AllArgsConstructor
 @Builder
+// This is a response class for updated tasklist objects
 public class UpdateTaskListResponse {
 
     @JsonProperty("id")

@@ -2,6 +2,7 @@ package nl.slotboom.models;
 
 import lombok.AllArgsConstructor;
 
+// fixed contants of task status
 @AllArgsConstructor
 public enum TaskStatus {
 

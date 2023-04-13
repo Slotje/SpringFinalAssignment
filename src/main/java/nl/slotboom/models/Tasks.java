@@ -13,7 +13,7 @@ import java.util.Date;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Tasks {
-
+    // all the collums in the database
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
@@ -38,6 +38,7 @@ public class Tasks {
     @JoinColumn(name = "tasklist_id", referencedColumnName = "id")
     private TaskLists taskList;
 
+    // Getters and Setter
     public int getId() {
         return id;
     }

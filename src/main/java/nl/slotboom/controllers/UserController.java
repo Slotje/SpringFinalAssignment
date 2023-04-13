@@ -12,33 +12,34 @@ import org.springframework.web.bind.annotation.*;
 
 import static nl.slotboom.constants.APIConstants.*;
 
-
 @RestController
 @RequestMapping("/" + API + "/" + VERSION + "/" + USER_ENDPOINT)
 @PreAuthorize("isAuthenticated()")
 public class UserController {
-    @Autowired
+    @Autowired // Injecting UserService bean
     private UserService service;
 
+    // Method to get the user's profile details
     @GetMapping("/details")
     public ResponseEntity<UserResponse> getUserProfile(
             Authentication authentication) {
         String username = authentication.getName();
-        UserResponse userResponse = service.getUserProfile(username);
-        return ResponseEntity.ok(userResponse);
+        UserResponse response = service.getUserProfile(username);
+        return ResponseEntity.ok(response);
     }
 
+    // Method to update the user's profile details
     @PutMapping("/update")
     public ResponseEntity<UserResponse> updateUser(
             @RequestBody UpdateUserRequest request,
             Authentication authentication) {
         String username = authentication.getName();
         User updatedUser = service.updateUser(username, request, authentication);
-
-        UserResponse userResponse = UserResponse.from(updatedUser);
-        return ResponseEntity.ok(userResponse);
+        UserResponse response = UserResponse.from(updatedUser);
+        return ResponseEntity.ok(response);
     }
 }
+
 
 
 

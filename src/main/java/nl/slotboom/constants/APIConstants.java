@@ -1,6 +1,7 @@
 package nl.slotboom.constants;
 
 public class APIConstants {
+    //here are all the endpoints that have multiple uses to make it easier to edit them
     public static final String API = "api";
     public static final String VERSION = "v1";
     public static final String USER_ENDPOINT = "user";

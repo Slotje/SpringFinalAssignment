@@ -24,7 +24,7 @@ import javax.persistence.*;
 @Table(name = "users")
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler", "password"})
 public class User implements UserDetails {
-
+    // all the collums in the database
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
@@ -52,6 +52,7 @@ public class User implements UserDetails {
         return List.of(new SimpleGrantedAuthority(role.name()));
     }
 
+    // Getters and Setters
     @Override
     public String getPassword() {
         return password;

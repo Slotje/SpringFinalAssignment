@@ -3,6 +3,7 @@ package nl.slotboom.models.requests;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import nl.slotboom.models.Role;
 
+// This is a class representing an update request, containing properties with getter and setter methods.
 public class UpdateUserRoleRequest {
     @JsonProperty
     private String username;
@@ -21,6 +22,5 @@ public class UpdateUserRoleRequest {
     public Role getRole() {
         return role;
     }
-
 }
 

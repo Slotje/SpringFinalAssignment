@@ -2,6 +2,7 @@ package nl.slotboom.auth;
 
 
 import java.io.IOException;
+
 import lombok.RequiredArgsConstructor;
 import nl.slotboom.repositories.TokenRepository;
 import nl.slotboom.services.JwtService;
@@ -20,14 +21,13 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 @Component
-@RequiredArgsConstructor // Constructor injection will be used to inject dependencies
+@RequiredArgsConstructor
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
-    // The following final fields are dependencies that will be injected via constructor injection
     private final JwtService jwtService;
     private final UserDetailsService userDetailsService;
     private final TokenRepository tokenRepository;
 
-    // Override the doFilterInternal method from OncePerRequestFilter to implement the JWT authentication logic
+    // doFilterInternal: Override the doFilterInternal method from OncePerRequestFilter to implement the JWT authentication logic
     @Override
     protected void doFilterInternal(
             @NonNull HttpServletRequest request,

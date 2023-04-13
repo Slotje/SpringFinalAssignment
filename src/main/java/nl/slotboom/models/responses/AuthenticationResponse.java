@@ -7,6 +7,7 @@ import lombok.*;
 @Setter
 @AllArgsConstructor
 @Builder
+// response body for auth token
 public class AuthenticationResponse {
     @JsonProperty("token")
     private String token;

@@ -17,7 +17,7 @@ import java.util.List;
 @NoArgsConstructor
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler", "tasks"})
 public class TaskLists {
-
+    // all the collums in the database
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
@@ -29,6 +29,7 @@ public class TaskLists {
     @Column(name = "description")
     private String description;
 
+    // the user_id that is linked with the tasklist
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User user;
@@ -39,10 +40,11 @@ public class TaskLists {
     @Column(name = "updated_at")
     private Date updatedAt;
 
+    // the binding with the tasks of a tasklist
     @OneToMany(mappedBy = "taskList")
     private List<Tasks> tasks;
 
-
+    // Getters and Setter
     public int getId() {
         return id;
     }

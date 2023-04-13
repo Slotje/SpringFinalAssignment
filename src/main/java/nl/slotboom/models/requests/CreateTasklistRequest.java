@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
+// This is a request class that defines a request object with given properties
 public class CreateTasklistRequest {
     @JsonProperty("name")
     private String name;
