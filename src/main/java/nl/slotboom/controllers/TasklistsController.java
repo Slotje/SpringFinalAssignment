@@ -1,11 +1,11 @@
 package nl.slotboom.controllers;
 
-import nl.slotboom.exceptions.AppException;
 import nl.slotboom.models.requests.CreateTasklistRequest;
+import nl.slotboom.models.requests.UpdateTasklistRequest;
 import nl.slotboom.models.responses.TaskListResponse;
+import nl.slotboom.models.responses.UpdateTaskListResponse;
 import nl.slotboom.services.TasklistsService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
@@ -56,20 +56,28 @@ public class TasklistsController {
 
     @PostMapping("/add") // defines an HTTP POST endpoint
     public ResponseEntity<TaskListResponse> createTaskListForUser(
-            @RequestBody CreateTasklistRequest createTasklistRequest,
+            @RequestBody CreateTasklistRequest request,
             Authentication authentication) {
         String username = authentication.getName();
-        TaskListResponse taskListResponse = service.createTaskListForUser(username, createTasklistRequest);
+        TaskListResponse taskListResponse = service.createTaskListForUser(username, request);
         return ResponseEntity.ok(taskListResponse);
     }
 
-    @DeleteMapping("/tasklists/{taskListName}")
+    @PutMapping("/update/{taskListName}")
+    public ResponseEntity<UpdateTaskListResponse> updateTaskListForUser(
+            @PathVariable String taskListName,
+            @RequestBody UpdateTasklistRequest request,
+            Authentication authentication) {
+        String username = authentication.getName();
+        UpdateTaskListResponse updateTaskListResponse = service.updateTaskListForUser(username, taskListName, request);
+        return ResponseEntity.ok(updateTaskListResponse);
+    }
+
+
+    @DeleteMapping("/delete/{taskListName}")
     public ResponseEntity<Void> deleteTaskList(
             @PathVariable String taskListName,
             Authentication authentication) {
-        if (authentication == null) {
-            throw new AppException("User not authenticated", HttpStatus.FORBIDDEN);
-        }
         String username = authentication.getName();
         service.deleteTaskList(username, taskListName);
         return ResponseEntity.ok().build();

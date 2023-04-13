@@ -11,6 +11,8 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @Service
 public class UserService {
 
@@ -34,7 +36,14 @@ public class UserService {
         User existingUser = repository.findByUsername(username)
                 .orElseThrow(() -> new AppException("User not found", HttpStatus.NOT_FOUND));
 
-        existingUser.setUsername(updateUserRequest.getUsername());
+        String newUsername = updateUserRequest.getUsername();
+        if (!newUsername.equals(existingUser.getUsername())) { // check if username is being changed
+            Optional<User> userWithSameUsername = repository.findByUsername(newUsername);
+            if (userWithSameUsername.isPresent()) {
+                throw new AppException("Username already exists", HttpStatus.CONFLICT);
+            }
+            existingUser.setUsername(newUsername);
+        }
 
         String newPassword = updateUserRequest.getPassword();
         if (newPassword != null) {
@@ -44,6 +53,7 @@ public class UserService {
 
         return repository.save(existingUser);
     }
+
 }
 
 

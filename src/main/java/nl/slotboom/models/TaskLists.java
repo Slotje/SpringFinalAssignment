@@ -33,9 +33,6 @@ public class TaskLists {
     @JoinColumn(name = "user_id")
     private User user;
 
-    @Column(name = "is_deleted", insertable = false)
-    Boolean isDeleted;
-
     @Column(name = "created_at")
     private Date createdAt;
 
@@ -48,10 +45,6 @@ public class TaskLists {
 
     public int getId() {
         return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
     }
 
     public String getName() {
@@ -78,35 +71,16 @@ public class TaskLists {
         this.user = user;
     }
 
-    public Boolean getDeleted() {
-        return isDeleted;
-    }
-
-    public void setDeleted(Boolean deleted) {
-        isDeleted = deleted;
-    }
-
     public Date getCreatedAt() {
         return createdAt;
-    }
-
-    public void setCreatedAt(Date createdAt) {
-        this.createdAt = createdAt;
     }
 
     public Date getUpdatedAt() {
         return updatedAt;
     }
 
-    public void setUpdatedAt(Date updatedAt) {
-        this.updatedAt = updatedAt;
-    }
-
     public List<Tasks> getTasks() {
         return tasks;
     }
 
-    public void setTasks(List<Tasks> tasks) {
-        this.tasks = tasks;
-    }
 }

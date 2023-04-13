@@ -28,9 +28,6 @@ public class Tasks {
     @Column(name = "status")
     private TaskStatus status;
 
-    @Column(name = "is_deleted", insertable = false)
-    Boolean isDeleted;
-
     @Column(name = "created_at")
     private Date createdAt;
 
@@ -73,20 +70,8 @@ public class Tasks {
         this.status = status;
     }
 
-    public Boolean getDeleted() {
-        return isDeleted;
-    }
-
-    public void setDeleted(Boolean deleted) {
-        isDeleted = deleted;
-    }
-
     public Date getCreatedAt() {
         return createdAt;
-    }
-
-    public void setCreatedAt(Date createdAt) {
-        this.createdAt = createdAt;
     }
 
     public Date getUpdatedAt() {
@@ -97,11 +82,4 @@ public class Tasks {
         this.updatedAt = updatedAt;
     }
 
-    public TaskLists getTaskList() {
-        return taskList;
-    }
-
-    public void setTaskList(TaskLists taskList) {
-        this.taskList = taskList;
-    }
 }

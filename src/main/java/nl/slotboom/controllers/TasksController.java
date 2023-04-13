@@ -23,26 +23,34 @@ public class TasksController {
     @PostMapping("/{taskListName}/add")
     public ResponseEntity<TaskResponse> createTaskForTaskList(
             @PathVariable String taskListName,
-            @RequestBody CreateTaskRequest createTaskRequest) {
-        TaskResponse taskResponse = service.createTaskForTaskList(taskListName, createTaskRequest);
+            @RequestBody CreateTaskRequest request,
+            Authentication authentication) {
+        String username = authentication.getName();
+        TaskResponse taskResponse = service.createTaskForTaskList(username, taskListName, request, authentication);
         return ResponseEntity.ok(taskResponse);
     }
 
 
-    @PutMapping("/updaterole/{taskName}")
+    @PutMapping("/updatestatus/{taskListName}/{taskName}")
     public ResponseEntity<TaskResponse> updateTaskStatus(
+            @PathVariable String taskListName,
             @PathVariable String taskName,
-            @RequestBody UpdateTaskStatusRequest request) {
-        TaskResponse taskResponse = service.updateTaskStatus(taskName, request);
+            @RequestBody UpdateTaskStatusRequest request,
+            Authentication authentication) {
+        String username = authentication.getName();
+        TaskResponse taskResponse = service.updateTaskStatus(username, taskName,taskListName, request);
         return ResponseEntity.ok(taskResponse);
     }
 
 
-    @PutMapping("/update/{taskName}")
+    @PutMapping("/update/{taskListName}/{taskName}")
     public ResponseEntity<TaskResponse> updateTask(
             @PathVariable String taskName,
-            @RequestBody UpdateTaskRequest updateTaskRequest) {
-        TaskResponse taskResponse = service.updateTask(taskName, updateTaskRequest);
+            @PathVariable String taskListName,
+            @RequestBody UpdateTaskRequest request,
+            Authentication authentication) {
+        String username = authentication.getName();
+        TaskResponse taskResponse = service.updateTask(username, taskName, taskListName, request);
         return ResponseEntity.ok(taskResponse);
     }
 

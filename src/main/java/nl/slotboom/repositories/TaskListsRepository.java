@@ -11,9 +11,9 @@ import java.util.Optional;
 @Repository
 public interface TaskListsRepository extends JpaRepository<TaskLists, Integer> {
     List<TaskLists> findByUser(User user);
-    Optional<TaskLists> findByName(String name);
     Optional<TaskLists> findByUserAndName(User user, String name);
     boolean existsByNameAndUser(String name, User user);
+    List<TaskLists> findByUserId(int userId);
 }
 
 

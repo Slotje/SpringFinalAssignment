@@ -5,7 +5,9 @@ import nl.slotboom.models.TaskLists;
 import nl.slotboom.models.Tasks;
 import nl.slotboom.models.User;
 import nl.slotboom.models.requests.CreateTasklistRequest;
+import nl.slotboom.models.requests.UpdateTasklistRequest;
 import nl.slotboom.models.responses.TaskListResponse;
+import nl.slotboom.models.responses.UpdateTaskListResponse;
 import nl.slotboom.repositories.TaskListsRepository;
 import nl.slotboom.repositories.TasksRepository;
 import nl.slotboom.repositories.UserRepository;
@@ -57,8 +59,12 @@ public class TasklistsService {
     public TaskListResponse getSpecificTaskListsForUser(String username, String taskListName) {
         User user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new AppException("User not found", HttpStatus.NOT_FOUND));
-        TaskLists taskList = taskListsRepository.findByName(taskListName)
+        List<TaskLists> taskLists = taskListsRepository.findByUserId(user.getId());
+        TaskLists taskList = taskLists.stream()
+                .filter(list -> list.getName().equals(taskListName))
+                .findFirst()
                 .orElseThrow(() -> new AppException("Task list not found", HttpStatus.NOT_FOUND));
+
         List<Tasks> tasks = taskList.getTasks();
         return TaskListResponse.from(taskList, user, tasks);
     }
@@ -83,14 +89,25 @@ public class TasklistsService {
         return TaskListResponse.from(savedTaskList, user, tasks);
     }
 
-    public void deleteTaskList(String username, String taskListName) {
-        Optional<User> optionalUser = userRepository.findByUsername(username);
-        User user = optionalUser.orElseThrow(() -> new AppException("No user found with username: " + username, HttpStatus.NOT_FOUND));
-        Optional<TaskLists> taskListOpt = taskListsRepository.findByUserAndName(user, taskListName);
-        if (taskListOpt.isEmpty()) {
-            throw new AppException("No task list found with name: " + taskListName, HttpStatus.NOT_FOUND);
+    public UpdateTaskListResponse updateTaskListForUser(String username, String taskListName, UpdateTasklistRequest updateTaskListRequest) {
+        User user = userRepository.findByUsername(username)
+                .orElseThrow(() -> new AppException("User not found", HttpStatus.NOT_FOUND));
+        TaskLists taskList = taskListsRepository.findByUserAndName(user, taskListName)
+                .orElseThrow(() -> new AppException("Task list not found", HttpStatus.NOT_FOUND));
+        if (!taskList.getName().equals(taskListName)) {
+            throw new AppException("Task list name cannot be changed", HttpStatus.BAD_REQUEST);
         }
-        TaskLists taskList = taskListOpt.get();
+        taskList.setName(updateTaskListRequest.getName());
+        taskList.setDescription(updateTaskListRequest.getDescription());
+        TaskLists updatedTaskList = taskListsRepository.save(taskList);
+        return UpdateTaskListResponse.from(updatedTaskList, user);
+    }
+
+    public void deleteTaskList(String username, String taskListName) {
+        User user = userRepository.findByUsername(username)
+                .orElseThrow(() -> new AppException("User not found with name " + username, HttpStatus.NOT_FOUND));
+        TaskLists taskList = taskListsRepository.findByUserAndName(user, taskListName)
+                .orElseThrow(() -> new AppException("Task list not found with name " + taskListName, HttpStatus.NOT_FOUND));
         List<Tasks> tasks = tasksRepository.findByTaskList(taskList);
         tasksRepository.deleteAll(tasks);
         taskListsRepository.delete(taskList);

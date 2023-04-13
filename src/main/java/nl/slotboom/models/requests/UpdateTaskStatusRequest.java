@@ -12,8 +12,4 @@ public class UpdateTaskStatusRequest {
     public TaskStatus getTaskStatus() {
         return taskStatus;
     }
-
-    public void setTaskStatus(TaskStatus taskStatus) {
-        this.taskStatus = taskStatus;
-    }
 }

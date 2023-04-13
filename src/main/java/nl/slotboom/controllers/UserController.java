@@ -30,10 +30,10 @@ public class UserController {
 
     @PutMapping("/update")
     public ResponseEntity<UserResponse> updateUser(
-            @RequestBody UpdateUserRequest updateUserRequest,
+            @RequestBody UpdateUserRequest request,
             Authentication authentication) {
         String username = authentication.getName();
-        User updatedUser = service.updateUser(username, updateUserRequest, authentication);
+        User updatedUser = service.updateUser(username, request, authentication);
 
         UserResponse userResponse = UserResponse.from(updatedUser);
         return ResponseEntity.ok(userResponse);

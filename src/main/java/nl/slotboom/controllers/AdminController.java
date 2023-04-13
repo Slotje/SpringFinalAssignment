@@ -30,7 +30,7 @@ public class AdminController {
         return ResponseEntity.ok(userResponse);
     }
 
-    @GetMapping("/all")
+    @GetMapping("/details/all")
     public List<UserResponse> getAllUsers() {
         return service.getAllUserResponses();
     }
@@ -38,9 +38,9 @@ public class AdminController {
     @PutMapping("/update_role/{username}")
     public ResponseEntity<UserResponse> updateUserRole(
             @PathVariable String username,
-            @RequestBody UpdateUserRoleRequest updateUserRoleRequest,
+            @RequestBody UpdateUserRoleRequest request,
             Authentication authentication) {
-        User updatedUser = service.updateUserRole(username, updateUserRoleRequest, authentication);
+        User updatedUser = service.updateUserRole(username, request, authentication);
 
         UserResponse userResponse = UserResponse.from(updatedUser);
         return ResponseEntity.ok(userResponse);
