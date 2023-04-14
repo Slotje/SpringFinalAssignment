@@ -4,6 +4,7 @@ import nl.slotboom.models.requests.CreateTaskRequest;
 import nl.slotboom.models.requests.UpdateTaskRequest;
 import nl.slotboom.models.requests.UpdateTaskStatusRequest;
 import nl.slotboom.models.responses.TaskResponse;
+import nl.slotboom.models.responses.UpdateTasksResponse;
 import nl.slotboom.services.TasksService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -47,13 +48,13 @@ public class TasksController {
 
     // This endpoint handles PUT requests to update the details of a specific task in a specific task list
     @PutMapping("/update/{taskListName}/{taskName}")
-    public ResponseEntity<TaskResponse> updateTask(
+    public ResponseEntity<UpdateTasksResponse> updateTask(
             @PathVariable String taskName,
             @PathVariable String taskListName,
             @RequestBody UpdateTaskRequest request,
             Authentication authentication) {
         String username = authentication.getName();
-        TaskResponse response = service.updateTask(username, taskName, taskListName, request);
+        UpdateTasksResponse response = service.updateTask(username, taskName, taskListName, request);
         return ResponseEntity.ok(response);
     }
 

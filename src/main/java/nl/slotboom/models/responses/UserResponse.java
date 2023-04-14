@@ -29,6 +29,7 @@ public class UserResponse {
     @JsonProperty("updatedAt")
     private Date updatedAt;
 
+
     public static UserResponse from(User user) {
         return UserResponse.builder()
                 .username(user.getUsername())

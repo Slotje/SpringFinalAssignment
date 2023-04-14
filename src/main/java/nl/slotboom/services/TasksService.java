@@ -9,6 +9,7 @@ import nl.slotboom.models.requests.CreateTaskRequest;
 import nl.slotboom.models.requests.UpdateTaskRequest;
 import nl.slotboom.models.requests.UpdateTaskStatusRequest;
 import nl.slotboom.models.responses.TaskResponse;
+import nl.slotboom.models.responses.UpdateTasksResponse;
 import nl.slotboom.repositories.TaskListsRepository;
 import nl.slotboom.repositories.TasksRepository;
 import nl.slotboom.repositories.UserRepository;
@@ -83,7 +84,7 @@ public class TasksService {
     }
 
     // updateTask: used to update a task
-    public TaskResponse updateTask(String username, String taskName, String taskListName, UpdateTaskRequest request) {
+    public UpdateTasksResponse updateTask(String username, String taskName, String taskListName, UpdateTaskRequest request) {
         // Find the task to be updated
         Tasks task = findTask(username, taskName, taskListName);
         // Update the task's name, description and updatedAt fields with the new values
@@ -93,7 +94,7 @@ public class TasksService {
         // Save the updated task to the database
         Tasks updatedTask = tasksRepository.save(task);
         // Convert the updated task to a TaskResponse object and return it
-        return TaskResponse.from(updatedTask);
+        return UpdateTasksResponse.from(updatedTask);
     }
 
     // deleteTask: used to delete a task

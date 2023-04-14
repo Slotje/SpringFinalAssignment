@@ -21,6 +21,9 @@ public class UpdateUserRequest {
     public String getPassword() {
         return password;
     }
+    public String setPassword() {
+        return password;
+    }
 
 }
 
