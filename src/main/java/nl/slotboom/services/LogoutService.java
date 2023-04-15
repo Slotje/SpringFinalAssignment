@@ -16,7 +16,7 @@ import javax.servlet.http.HttpServletResponse;
 @RequiredArgsConstructor
 public class LogoutService implements LogoutHandler {
 
-    private final TokenRepository tokenRepository;
+    private final TokenRepository repository;
 
     // The logout method in the provided code handles the logout request and invalidates the user's authentication and
     // authorization by setting the token's expired and revoked properties to true, saving the modified token to the
@@ -36,13 +36,13 @@ public class LogoutService implements LogoutHandler {
         jwt = authHeader.substring(7);
         // If the token is present, the method retrieves it from the tokenRepository
         // and sets its expired and revoked properties to true
-        var storedToken = tokenRepository.findByToken(jwt)
+        var storedToken = repository.findByToken(jwt)
                 .orElse(null);
         if (storedToken != null) {
             storedToken.setExpired(true);
             storedToken.setRevoked(true);
             // The modified token is saved to the tokenRepository
-            tokenRepository.save(storedToken);
+            repository.save(storedToken);
             // The users security context is cleared using the SecurityContextHolder
             SecurityContextHolder.clearContext();
         }

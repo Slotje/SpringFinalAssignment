@@ -25,7 +25,7 @@ import javax.servlet.http.HttpServletResponse;
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
     private final JwtService jwtService;
     private final UserDetailsService userDetailsService;
-    private final TokenRepository tokenRepository;
+    private final TokenRepository repository;
 
     // doFilterInternal: Override the doFilterInternal method from OncePerRequestFilter to implement the JWT authentication logic
     @Override
@@ -52,7 +52,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             // Load the user details using the "userDetailsService" dependency
             UserDetails userDetails = this.userDetailsService.loadUserByUsername(userName);
             // Check if the token is valid and not expired using the "tokenRepository" dependency
-            var isTokenValid = tokenRepository.findByToken(jwt)
+            var isTokenValid = repository.findByToken(jwt)
                     .map(t -> !t.isExpired() && !t.isRevoked())
                     .orElse(false);
             // If the token is valid, create a new authentication token and set it in the security context using the "SecurityContextHolder" class from Spring Security

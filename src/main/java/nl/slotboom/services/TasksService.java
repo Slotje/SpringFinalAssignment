@@ -59,7 +59,7 @@ public class TasksService {
 
     // findTask: This method finds a task by username, task name and task list name.
     private Tasks findTask(String username, String taskName, String taskListName) {
-        // It retrieves the user from the userRepository based on the username, or throws an user is not found exception
+        // It retrieves the user from the userRepository based on the username, or throws a user is not found exception
         User user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new AppException("User not found with name " + username, HttpStatus.NOT_FOUND));
         // It retrieves the task list from the taskListsRepository based on the user and tasklist name

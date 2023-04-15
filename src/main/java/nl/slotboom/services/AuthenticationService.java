@@ -29,7 +29,7 @@ public class AuthenticationService {
     private final UserRepository repository;
     private final TokenRepository tokenRepository;
     private final PasswordEncoder passwordEncoder;
-    private final JwtService jwtService;
+    private final JwtService service;
     private final AuthenticationManager authenticationManager;
 
     // register: used to register an user
@@ -55,7 +55,7 @@ public class AuthenticationService {
         // Save the newly created User object to the repository
         var savedUser = repository.save(user);
         // Generate a JWT token for the newly created User object
-        var jwtToken = jwtService.generateToken(user);
+        var jwtToken = service.generateToken(user);
         // Save the generated JWT token to the repository
         saveUserToken(savedUser, jwtToken);
         // Return an AuthenticationResponse object containing the generated JWT token
@@ -77,7 +77,7 @@ public class AuthenticationService {
         var user = repository.findByUsername(request.getUsername())
                 .orElseThrow();
         // It generates a JWT token using a jwtService object
-        var jwtToken = jwtService.generateToken(user);
+        var jwtToken = service.generateToken(user);
         // It revokes all previous tokens for the user
         revokeAllUserTokens(user);
         // It saves the new token for the user

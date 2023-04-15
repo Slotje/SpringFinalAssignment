@@ -52,32 +52,22 @@ public class User implements UserDetails {
         return List.of(new SimpleGrantedAuthority(role.name()));
     }
 
-    // Getters and Setters
-    @Override
-    public String getPassword() {
-        return password;
-    }
-
-    @Override
-    public String getUsername() {
-        return username;
-    }
-
+    // Needed credentials
     @Override
     public boolean isAccountNonExpired() {
         return true;
     }
-
+//
     @Override
     public boolean isAccountNonLocked() {
         return true;
     }
-
+//
     @Override
     public boolean isCredentialsNonExpired() {
         return true;
     }
-
+//
     @Override
     public boolean isEnabled() {
         return true;

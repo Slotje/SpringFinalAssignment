@@ -43,46 +43,4 @@ public class TaskLists {
     // the binding with the tasks of a tasklist
     @OneToMany(mappedBy = "taskList")
     private List<Tasks> tasks;
-
-    // Getters and Setter
-    public int getId() {
-        return id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public User getUser() {
-        return user;
-    }
-
-    public void setUser(User user) {
-        this.user = user;
-    }
-
-    public Date getCreatedAt() {
-        return createdAt;
-    }
-
-    public Date getUpdatedAt() {
-        return updatedAt;
-    }
-
-    public List<Tasks> getTasks() {
-        return tasks;
-    }
-
 }
