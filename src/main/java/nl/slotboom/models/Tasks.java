@@ -37,4 +37,8 @@ public class Tasks {
     @ManyToOne
     @JoinColumn(name = "tasklist_id", referencedColumnName = "id")
     private TaskLists taskList;
+
+    @Lob
+    @Column(name = "attachment")
+    private byte[] attachment;
 }

@@ -14,9 +14,13 @@ import nl.slotboom.repositories.TaskListsRepository;
 import nl.slotboom.repositories.TasksRepository;
 import nl.slotboom.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ByteArrayResource;
+import org.springframework.core.io.Resource;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.Date;
 
 @Service
@@ -69,6 +73,28 @@ public class TasksService {
         return tasksRepository.findByTaskListAndName(taskList, taskName)
                 .orElseThrow(() -> new AppException("No task found with name: " + taskName + " in task list: " + taskListName, HttpStatus.NOT_FOUND));
     }
+
+
+    // addFileToTask: Used to add an attachment to a task
+    public Resource addFileToTask(String username, String taskListName, String taskName, MultipartFile file) throws IOException {
+        // It uses the findTask method to retrieve the Tasks object
+        Tasks task = findTask(username, taskName, taskListName);
+        // It updates or adds an attachment from the MultipartFile object
+        task.setAttachment(file.getBytes());
+        tasksRepository.save(task);
+        return new ByteArrayResource(file.getBytes());
+    }
+
+    public Resource getFileFromTask(String username, String taskListName, String taskName) {
+        // Retrieve the Tasks object
+        Tasks task = findTask(username, taskName, taskListName);
+        // Retrieve the attachment from the Tasks object
+        byte[] attachment = task.getAttachment();
+        // Create a ByteArrayResource from the attachment
+        ByteArrayResource resource = new ByteArrayResource(attachment);
+        return resource;
+    }
+
 
     // updateTaskStatus: updates the status of a task
     public TaskResponse updateTaskStatus(String username, String taskName, String taskListName, UpdateTaskStatusRequest request) {
